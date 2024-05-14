@@ -1,0 +1,56 @@
+// Overall
+
+image = load_image(image_path)
+
+grey_image = take_mean_of_every_pixel(image)
+
+image_minimum_csgraph = image_to_csgraph(image)
+image_maximum_csgraph = image_to_csgraph(image, edges=negative)
+
+minimum_spanning_graph = minimum_spanning_tree(image_minimum_csgraph)
+maximum_spanning_graph = minimum_spanning_tree(image_maximum_csgraph)
+
+difference_graph = maximum_spanning_graph - minimum_spanning_graph
+
+plot_csgraph(difference_graph)
+
+minimum_graph_image = csgraph_to_image(minimum_spanning_graph)
+combined_image = image - minimum_image
+
+show(combined_image)
+
+
+// image_to_csgraph
+image_to_csgraph(image, positive=True, threshold=0) :
+	multiplication_factor = 1
+	if not positive:
+		multiplication_factor = -1
+
+	threshold = threshold*multiplication_factor
+	rows, cols = image.shape
+
+	arr = flatten_image(image)
+	n = length(arr)
+
+	csgraph = []
+
+	for index, pixel in enumerate(arr):
+		distance_array = zero_array(size=n)
+		
+		x_coordinate = index%cols
+		y_coordinate = index/cols
+
+		if not x_coordinate == cols-1:
+			value = absolute_value(pixel-arr[index+1])*multiplication_factor
+			value = value + (1*multiplication_factor)
+			distance_array[index+1] = value if value > threshold else 0
+		
+		if not y_coordinate == rows-1:
+			value = absolute_value(pixel-arr[index+cols])*multiplication_factor
+			value = value + (1*multiplication_factor)
+			distance_array[index+cols] = value  if value > threshold else 0
+		
+			csgraph.append(distance_array)
+
+	return array_to_csr_matrix(csgraph)
+
