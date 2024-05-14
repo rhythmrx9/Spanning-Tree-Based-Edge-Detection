@@ -1,4 +1,4 @@
-﻿**Spanning Tree-Based Edge Detection for Robust Image Segmentation**
+﻿# Spanning Tree-Based Edge Detection for Robust Image Segmentation
 
 **Authors:** Shriya Negi and Vijay Kumar Bhat
 
